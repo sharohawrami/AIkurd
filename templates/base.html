@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AI Kurd — Learn AI in Kurdish & English{% endblock %}</title>
+    <meta name="description" content="{% block description %}AI Kurd: AI learning, tech tutorials, and AI Safety — in Kurdish and English.{% endblock %}">
+    <meta name="theme-color" content="#09090b">
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" sizes="32x32">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='img/favicon-32.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='img/favicon-192.png') }}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{{ url_for('static', filename='img/favicon-512.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='img/favicon-180.png') }}">
+    <meta property="og:title" content="{% block og_title %}AI Kurd — Learn AI in Kurdish & English{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}AI tools, tech tutorials, and AI Safety — in Kurdish and English.{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ url_for('static', filename='img/og.png', _external=True) }}{% endblock %}">
+    <meta property="og:site_name" content="AI Kurd">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:url" content="{{ request.url }}">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Site ownership verification -->
+    <meta name="msvalidate.01" content="FE23F947A78A90CE0C8BBE88550FD7D0" />
+
+    <!-- Let search engines + AI crawlers index and quote this site -->
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta name="googlebot" content="index, follow, max-snippet:-1">
+    <link rel="canonical" href="{{ request.base_url }}">
+
+    <!-- AI-readable summary of the whole site -->
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt">
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+
+    <!-- Structured data: helps AI models understand what this site is -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalOrganization",
+      "name": "AI Kurd",
+      "alternateName": ["AIKurd", "زیرەکیی دەستکردی کوردی"],
+      "url": "{{ request.url_root }}",
+      "logo": "{{ url_for('static', filename='img/logo.png', _external=True) }}",
+      "description": "AI Kurd is a Kurdish AI education and research platform teaching artificial intelligence, AI safety, and practical AI tools in Kurdish (Sorani) and English.",
+      "inLanguage": ["ckb", "en"],
+      "knowsAbout": ["Artificial Intelligence", "AI Safety", "Machine Learning", "Prompt Engineering", "Kurdish language technology"]
+    }
+    </script>
+
+    <!-- Tailwind is compiled locally: run `npm run css` after editing templates -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.css') }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
+
+    <!-- Preload the next page as soon as the user hovers a link, so clicking
+         feels instant. Admin and IndexNow are excluded: prerendering fires a
+         real GET request, which would log you out or trigger a submission. -->
+    <script type="speculationrules">
+    {
+      "prerender": [{
+        "where": {
+          "and": [
+            { "href_matches": "/*" },
+            { "not": { "href_matches": "/admin/*" } },
+            { "not": { "href_matches": "/indexnow/*" } },
+            { "not": { "selector_matches": "[rel~=nofollow]" } }
+          ]
+        },
+        "eagerness": "moderate"
+      }]
+    }
+    </script>
+
+    {% block head_extra %}{% endblock %}
+</head>
+
+<body class="text-white antialiased min-h-screen flex flex-col">
+    <script>try{if(localStorage.getItem('aikurd-lang')==='ku'){document.body.classList.add('lang-ku');document.documentElement.dir='rtl';document.documentElement.lang='ckb';}}catch(e){}</script>
+    {# ---- Background scenes: shown one after another as you scroll.
+          Drop your own 4K photos into static/img/bg/ and list them here. ---- #}
+    {% set BG_SCENES = ['bg/neural.jpg', 'bg/circuit.jpg', 'bg/mountains.jpg', 'bg/streams.jpg'] %}
+    <div class="scenes" aria-hidden="true">
+        {% for bg in BG_SCENES %}
+        <div class="scene{% if loop.first %} active{% endif %}" style="background-image:url('{{ url_for('static', filename='img/' ~ bg) }}')"></div>
+        {% endfor %}
+    </div>
+    <div class="hover-bg" id="hover-bg" aria-hidden="true"><img alt=""></div>
+    <div class="site-bg" aria-hidden="true"></div>
+
+    {% set nav = [
+        ('/', 'home', 'Home', 'سەرەکی'),
+        ('/articles/', 'articles', 'Articles', 'وتارەکان'),
+        ('/resources/', 'resources', 'Resources', 'سەرچاوەکان'),
+        ('/ai-safety/', 'safety', 'AI Safety', 'سەلامەتی'),
+        ('/prompts/', 'prompts', 'Prompts', 'پرۆمپتەکان'),
+        ('/projects/', 'projects', 'Projects', 'پڕۆژەکان'),
+        ('/daily/', 'daily', 'Daily', 'ڕۆژانە'),
+        ('/bot/', 'bot', 'Bot', 'بۆت'),
+        ('/about/', 'about', 'About', 'دەربارە'),
+    ] %}
+
+    <!-- ============ HEADER ============ -->
+    <header id="site-header" class="site-header">
+        <nav class="container-x">
+            <div class="flex items-center justify-between h-[72px] gap-4">
+
+                <a href="/" class="flex items-center gap-3 shrink-0" aria-label="AI Kurd home">
+                    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="AI Kurd" class="h-11 w-auto">
+                </a>
+
+                <div class="hidden lg:flex items-center gap-0.5 rounded-full border border-white/[.08] bg-white/[.03] p-1">
+                    {% for href, key, en, ku in nav %}
+                    <a href="{{ href }}" class="nav-link {% if active_page == key %}active{% endif %}">
+                        <span class="en-only">{{ en }}</span><span class="ku-only">{{ ku }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+
+                <div class="hidden lg:flex items-center gap-2">
+                    <button data-lang-toggle class="btn btn-ghost btn-sm" aria-label="Switch language">
+                        <span class="en-only font-kurdish">کوردی</span><span class="ku-only">English</span>
+                    </button>
+                    <a href="/services/" class="btn btn-primary btn-sm">
+                        <span class="en-only">Services</span><span class="ku-only">خزمەتگوزارییەکان</span>
+                    </a>
+                </div>
+
+                <div class="lg:hidden"><button id="mobile-menu-btn" class="btn-icon" aria-label="Toggle menu" aria-expanded="false">
+                    <svg id="icon-open" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" d="M3.75 7h16.5M3.75 12h16.5M3.75 17h16.5"/></svg>
+                    <svg id="icon-close" class="w-5 h-5 hidden" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button></div>
+            </div>
+
+            <!-- Mobile menu -->
+            <div id="mobile-menu" class="mobile-menu lg:hidden border-t border-white/[.08] py-4">
+                <div class="grid grid-cols-2 gap-1">
+                    {% for href, key, en, ku in nav %}
+                    <a href="{{ href }}" class="nav-link block {% if active_page == key %}active{% endif %}">
+                        <span class="en-only">{{ en }}</span><span class="ku-only">{{ ku }}</span>
+                    </a>
+                    {% endfor %}
+                    <a href="/services/" class="nav-link block {% if active_page == 'services' %}active{% endif %}">
+                        <span class="en-only">Services</span><span class="ku-only">خزمەتگوزارییەکان</span>
+                    </a>
+                </div>
+                <div class="flex items-center gap-2 mt-4 px-1">
+                    <button data-lang-toggle class="btn btn-ghost btn-sm flex-1">
+                        <span class="en-only font-kurdish">کوردی</span><span class="ku-only">English</span>
+                    </button>
+                    <a href="/admin/" class="btn btn-ghost btn-sm flex-1">Admin</a>
+                </div>
+            </div>
+            <div id="scroll-progress" class="scroll-progress"></div>
+        </nav>
+    </header>
+
+    <!-- ============ MAIN ============ -->
+    <main class="flex-1 w-full">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="mt-32 border-t border-white/[.08] relative">
+        <div class="container-x py-16">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12">
+                <div class="md:col-span-5">
+                    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="AI Kurd" class="h-12 w-auto mb-5">
+                    <p class="text-[15px] muted leading-relaxed max-w-sm en-only">The first Kurdish AI education platform. Tools, tutorials, and AI Safety — explained clearly, in Kurdish and English.</p>
+                    <p class="rtl text-[15px] muted leading-loose max-w-sm ku-only">یەکەم پلاتفۆرمی فێرکاری زیرەکیی دەستکردی کوردی. ئامراز، فێرکاری و سەلامەتی AI — بە ڕوونی، بە کوردی و ئینگلیزی.</p>
+                    <div class="flex items-center gap-2 mt-7">
+                        <a href="https://www.instagram.com/aikurd_/" target="_blank" rel="noopener" class="btn-icon" aria-label="Instagram">
+                            <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+                        </a>
+                        <a href="https://www.facebook.com/profile.php?id=61591461970399" target="_blank" rel="noopener" class="btn-icon" aria-label="Facebook">
+                            <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v6h4v-6h3l1-4h-4V8a1 1 0 0 1 0 0z"/></svg>
+                        </a>
+                        <a href="mailto:aikurdsafety@gmail.com" class="btn-icon" aria-label="Email">
+                            <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m3 7 9 6 9-6"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="md:col-span-2 md:col-start-7">
+                    <p class="eyebrow mb-5">Learn</p>
+                    <ul class="space-y-3 text-[15px]">
+                        <li><a href="/articles/" class="muted hover:text-white transition-colors">Articles</a></li>
+                        <li><a href="/resources/" class="muted hover:text-white transition-colors">Resource Hub</a></li>
+                        <li><a href="/ai-safety/" class="muted hover:text-white transition-colors">AI Safety</a></li>
+                        <li><a href="/prompts/" class="muted hover:text-white transition-colors">Prompt Library</a></li>
+                    </ul>
+                </div>
+                <div class="md:col-span-2">
+                    <p class="eyebrow mb-5">Explore</p>
+                    <ul class="space-y-3 text-[15px]">
+                        <li><a href="/projects/" class="muted hover:text-white transition-colors">Projects</a></li>
+                        <li><a href="/daily/" class="muted hover:text-white transition-colors">Daily Energy</a></li>
+                        <li><a href="/bot/" class="muted hover:text-white transition-colors">AI Kurd Bot</a></li>
+                        <li><a href="/services/" class="muted hover:text-white transition-colors">Services</a></li>
+                    </ul>
+                </div>
+                <div class="md:col-span-2">
+                    <p class="eyebrow mb-5">Company</p>
+                    <ul class="space-y-3 text-[15px]">
+                        <li><a href="/about/" class="muted hover:text-white transition-colors">About us</a></li>
+                        <li><a href="mailto:aikurdsafety@gmail.com" class="muted hover:text-white transition-colors">Contact</a></li>
+                        <li><a href="/admin/" rel="nofollow" class="muted-2 hover:text-white transition-colors">Admin</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="hairline mt-14 pt-7 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <p class="text-[13px] muted-2">© 2026 AI Kurd. All rights reserved.</p>
+                <p class="text-[13px] muted-2">Built for the Kurdish AI community · <span class="font-kurdish">دروستکراوە بۆ کۆمەڵگەی کوردی</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/site.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

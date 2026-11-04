@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% from "_page_hero.html" import page_hero %}
+{% block title %}AI Safety Hub — AI Kurd{% endblock %}
+
+{% block content %}
+
+{{ page_hero('AI Safety Hub', 'ناوەندی سەلامەتی', 'Powerful AI,<br><span class="muted-2">built carefully.</span>', 'زیرەکیی دەستکردی بەهێز،<br><span class="muted-2">بە وریاییەوە دروستکراو.</span>',
+    'Understanding AI Alignment — the science of making AI systems do what we actually want — explained for everyone.',
+    'تێگەیشتن لە هاوڕێککردنی زیرەکیی دەستکرد — زانستی وا کردنی سیستەمەکان کە ئەوە بکەن کە بەڕاستی دەمانەوێت.', center=True) }}
+
+<!-- ============ CORE CONCEPTS ============ -->
+<section class="container-x">
+    {% set concepts = [
+        ('01', 'Alignment', 'What is AI Alignment?', 'هاوڕێککردنی زیرەکیی دەستکرد چییە؟',
+         'Alignment is the challenge of making AI systems pursue the goals we intend — not just the goals we literally specify. A system optimizing the wrong objective can cause harm even without any bad intent. As models grow more capable, getting this right becomes one of the most important technical problems of our time.'),
+        ('02', 'Interpretability', 'Looking inside the black box', 'سەیرکردنی ناوەوەی سندوقە ڕەشەکە',
+         'Interpretability research tries to understand why a neural network produces the answers it does. If we can read a model\'s internal reasoning, we can catch deception, bias, and errors before they matter — like an MRI for artificial minds.'),
+        ('03', 'Evaluation', 'Testing frontier models', 'تاقیکردنەوەی مۆدێلە پێشکەوتووەکان',
+         'Before deployment, frontier models are stress-tested for dangerous capabilities and failure modes — red-teaming, benchmark evals, and safety cases that must hold up under adversarial pressure.'),
+        ('04', 'Governance', 'Policy & responsible scaling', 'سیاسەت و گەشەپێدانی بەرپرسانە',
+         'Technical safety needs institutional support: scaling policies, model audits, and international coordination so that safety keeps pace with capability everywhere — including our region.'),
+    ] %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 reveal-stagger">
+        {% for num, cat, title, title_ku, body in concepts %}
+        <article class="card card-hover p-8">
+            <div class="flex items-center justify-between mb-6">
+                <span class="font-mono text-[12px] muted-2">{{ num }}</span>
+                <span class="tag">{{ cat }}</span>
+            </div>
+            <h2 class="text-[22px] font-bold">{{ title }}</h2>
+            <p class="rtl text-[15px] muted mt-1.5 font-kurdish">{{ title_ku }}</p>
+            <p class="text-[15px] muted mt-5 leading-relaxed">{{ body }}</p>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- ============ QUOTE ============ -->
+<section class="container-x section">
+    <div class="max-w-4xl mx-auto text-center reveal">
+        <p class="display text-3xl sm:text-5xl !leading-[1.15]">"The goal is not to slow AI down.<br><span class="muted-2">It's to make sure it goes well."</span></p>
+        <p class="rtl text-xl muted mt-6 font-kurdish">ئامانج خاوکردنەوەی زیرەکیی دەستکرد نییە — دڵنیابوونە لەوەی بە باشی بەڕێوە دەچێت.</p>
+    </div>
+</section>
+
+<!-- ============ START LEARNING ============ -->
+<section class="container-x">
+    <div class="panel p-10 sm:p-16 text-center reveal">
+        <h2 class="en-only display text-3xl sm:text-4xl">New to AI Safety?</h2>
+        <h2 class="ku-only rtl text-3xl sm:text-4xl font-extrabold">تازە دەستت پێکردووە لە سەلامەتی AI؟</h2>
+        <p class="en-only mt-4 muted max-w-xl mx-auto text-[17px]">Start with our beginner-friendly introduction — no math, no jargon, available in Kurdish.</p>
+        <p class="ku-only rtl mt-4 muted max-w-xl mx-auto text-[17px]">بە پێشەکییە سادەکەمان دەست پێبکە — بێ بیرکاری، بێ زاراوەی ئاڵۆز، بە کوردی.</p>
+        <a href="/articles/" class="btn btn-primary mt-8"><span class="en-only">Start reading</span><span class="ku-only">دەست پێبکە</span></a>
+    </div>
+</section>
+
+{% endblock %}

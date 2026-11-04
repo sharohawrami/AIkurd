@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% from "_page_hero.html" import page_hero %}
+{% block title %}Our Projects — AI Kurd{% endblock %}
+
+{% block content %}
+
+{{ page_hero('Portfolio', 'پۆرتفۆلیۆ', 'Our Projects', 'پڕۆژەکانمان',
+    'Websites, applications, and everything else built by AI Kurd.',
+    'ماڵپەڕ، ئەپڵیکەیشن و هەموو ئەوانەی لەلایەن AI Kurd دروستکراون.') }}
+
+<section class="container-x">
+
+    {% if projects %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 reveal-stagger">
+        {% for p in projects %}
+        <a {% if p.url %}href="{{ p.url }}" target="_blank" rel="noopener"{% endif %}
+           class="card card-hover overflow-hidden flex flex-col group" {% if p.image %}data-hover-bg="{{ p.image }}"{% endif %}>
+            <div class="cover aspect-video rounded-t-[19px] border-b border-white/[.06]" style="container-type:inline-size">
+                {% if p.image %}
+                <img src="{{ p.image }}" alt="{{ p.name }}" loading="lazy">
+                {% else %}
+                <div class="cover-fallback"><span>{{ (p.name or '?')[0]|upper }}</span><em class="cf-label not-italic">{{ p.category }}</em></div>
+                {% endif %}
+            </div>
+            <div class="p-6 flex-1 flex flex-col">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="tag">{{ p.category }}</span>
+                    {% if p.url %}<svg class="w-4 h-4 muted-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M8 7h9v9"/></svg>{% endif %}
+                </div>
+                <h3 class="font-semibold text-[18px]">{{ p.name }}</h3>
+                <p class="text-[14.5px] muted mt-2 leading-relaxed flex-1">{{ p.desc }}</p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+
+    {% else %}
+    <div class="panel py-24 px-8 text-center reveal">
+        <div class="orb-wrap !max-w-[160px] mb-8"><div class="orb-ring"></div><div class="orb-ring r2"></div><div class="orb"></div></div>
+        <h2 class="en-only display text-3xl">Projects coming soon</h2>
+        <h2 class="ku-only rtl text-3xl font-extrabold">پڕۆژەکان بەم زووانە</h2>
+        <p class="en-only mt-3 muted max-w-md mx-auto">We're building. The first AI Kurd projects will appear here.</p>
+        <p class="ku-only rtl mt-3 muted max-w-md mx-auto">خەریکی دروستکردنین. یەکەم پڕۆژەکانی AI Kurd لێرە دەردەکەون.</p>
+    </div>
+    {% endif %}
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% from "_page_hero.html" import page_hero %}
+{% block title %}Prompt Library — AI Kurd{% endblock %}
+
+{% block content %}
+
+{{ page_hero('Interactive', 'کارلێککار', 'Prompt Library', 'کتێبخانەی پرۆمپت',
+    'Ready-to-use prompts for text and image generation — with example results. Filter by category, click to copy, paste into any AI tool.',
+    'پرۆمپتی ئامادە بۆ نووسین و دروستکردنی وێنە — لەگەڵ نموونەی ئەنجام. پۆلێن هەڵبژێرە، کلیک بکە بۆ کۆپیکردن.') }}
+
+<section class="container-x">
+
+    <!-- Filters + search -->
+    <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-8 reveal">
+        <div class="flex gap-2 flex-wrap" id="prompt-filters">
+            <button data-filter="all" class="pfilter chip active">All</button>
+            {% for cat in categories %}
+            <button data-filter="{{ cat }}" class="pfilter chip">{{ cat }}</button>
+            {% endfor %}
+        </div>
+        <label class="search sm:ms-auto w-full sm:w-72">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input id="prompt-search" type="search" dir="auto" placeholder="Search prompts…">
+        </label>
+    </div>
+
+    <!-- Prompt cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 reveal-stagger" id="prompt-grid">
+        {% for p in prompts %}
+        <article class="prompt-card card card-hover flex flex-col overflow-hidden" {% if p.image %}data-hover-bg="{{ p.image }}"{% endif %}
+                 data-category="{{ p.category }}" data-search="{{ p.title|lower }} {{ p.text|lower }}">
+            {% if p.image %}
+            <div class="cover aspect-video rounded-t-[19px] border-b border-white/[.06]">
+                <img src="{{ p.image }}" alt="Example result for {{ p.title }}" loading="lazy">
+            </div>
+            {% endif %}
+            <div class="p-6 flex-1 flex flex-col">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="tag">{{ p.category }}</span>
+                    <span class="font-mono text-[11px] muted-3">#{{ "%02d"|format(loop.index) }}</span>
+                </div>
+                <h3 class="font-semibold text-[17px]">{{ p.title }}</h3>
+                <div class="mt-4 flex-1 inset p-4 text-[13.5px] muted leading-relaxed font-mono prompt-text">{{ p.text }}</div>
+                <button class="copy-btn btn btn-ghost btn-sm w-full mt-4">Copy prompt</button>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    <p id="no-prompts" class="hidden muted-2 text-sm mt-6">No prompts match your filter.</p>
+</section>
+
+<div id="toast" class="toast">✓ Copied to clipboard</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/prompts.js') }}"></script>
+{% endblock %}
